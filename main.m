@@ -249,27 +249,32 @@ disp('Average Flow Histogram 17 created!')
 
 % TRAINING MODEL
 
-trainData = [AFH1'; AFH2'; AFH3'; AFH4'; AFH5'; AFH6'; AFH7'; AFH8'; AFH9';AFH10'; AFH11'; AFH12'; AFH13'; AFH14'; AFH17'];    % training data
-labels = ['S1';'S2';'S3';'S4';'S5';'S6'; 'S6';'S7';'S7'; 'S8'; 'S8'; 'S9'; 'S9'; 'S6'; 'S9'];     % training labels
+trainData = [AFH1'; AFH2'; AFH3'; AFH4'; AFH5'; AFH6'; AFH7'; AFH8'; AFH9';AFH10'; AFH11'; AFH12'; AFH13'; AFH14'; AFH15'; AFH16'; AFH17'];    % training data
+labels =    [ 'S1';  'S2'; 'S3' ; 'S4' ; 'S5' ; 'S6' ; 'S6' ; 'S7' ; 'S7' ; 'S8' ; 'S8'  ; 'S9'  ; 'S9'  ; 'S6'  ; 'S6'  ; 'S9'  ; 'S9'  ];     % training labels
 
-testData = [AFH15'; AFH16'];  % testing data
+testData = [AFH15'; AFH17'];  % testing data
 
 %disp(trainData);
 %disp(labels);
 
 % Fitting the Model
-model = fitcknn(trainData, labels);
+model = fitcknn(trainData, labels, 'NumNeighbors',10, 'Standardize', 1);
+
+save('trainingData.mat', 'trainData', 'labels');
+
+% Cross Validation
+cvknn = crossval(model);
+classError = kfoldLoss(cvknn);
+disp(classError);
 
 % Testing the classifier
-meanClass = predict(model, testData)
+meanClass = predict(model, testData);
+disp(meanClass);
 
 % Plotting multivariate data
 
-X = [ AFH1'; AFH2'; AFH3'; AFH4'; AFH5'; AFH6'; AFH7'; AFH8'; AFH9'; AFH10'; AFH11'; AFH12'; AFH13']; 
-parallelcoords(X, 'group', [ 1 2 3 4 5 6 6 7 7 8 8 9 9], 'standardize', 'on');
-
-
-
+X = [ AFH1'; AFH2'; AFH3'; AFH4'; AFH5'; AFH6'; AFH7'; AFH8'; AFH9'; AFH10'; AFH11'; AFH12'; AFH13'; AFH14'; AFH15'; AFH16'; AFH17']; 
+parallelcoords(X, 'group', [ 1 2 3 4 5 6 6 7 7 8 8 9 9 6 6 9 9], 'standardize', 'on');
 
 
 
